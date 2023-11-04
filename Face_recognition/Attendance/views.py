@@ -10,6 +10,17 @@ import face_recognition as fr
 import os
 import cv2
 
+# imgs=os.listdir('imgs/')
+# for img in imgs:
+#     roll='22000'+os.path.splitext(img)[0]
+#     pas=roll
+#     user=User.objects.create(username=roll,password=pas)
+#     name=roll
+#     stu=Student.objects.create(user=user,Name=name,Photo=img)
+#     stu.save()
+
+
+
 # attendance={}
 # with open('att.csv','r+') as f:
 #     names=f.readlines()
@@ -24,10 +35,8 @@ def encode_faces(folder):
         known_image=fr.load_image_file(f'{folder}{filename}')
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
-         list_people_encoding.append((know_encoding,filename))
+         list_people_encoding.append((know_encoding,os.path.splitext(filename)[0]))
     return list_people_encoding
-
-
 
 encoded_faces=encode_faces('imgs/')
 def find_target_face(target_images,target_encodings,date,course):
@@ -46,8 +55,11 @@ def find_target_face(target_images,target_encodings,date,course):
                 face_number+=1
 
 def markAttendance (label,date,course):
-    stu=Student.objects.filter(user=User.objects.filter(username=label)[0])[0]
+    name='22000'+label
+    stu=Student.objects.filter(user=User.objects.filter(username=name)[0])[0]
     att=1
+    if attendance.objects.filter(student=stu,attendance=att,date=date,course=course).exists():
+        return
     atten=attendance.objects.create(student=stu,attendance=att,date=date,course=course)
     atten.save()
     # if attendance[os.path.splitext(label)[0]]==0:
@@ -84,6 +96,11 @@ def home(request):
                     img=fr.load_image_file(f'media/uploads/{file}')
                     t_img=fr.face_encodings(img)
                     find_target_face(img,t_img,date,course)
+                for photo in photos:
+
+                    file_name=os.path.join(settings.MEDIA_ROOT, 'uploads', photo.name)
+                    if os.path.isfile(file_name):
+                        os.remove(file_name)
                
                 return redirect('view_photos')
 
