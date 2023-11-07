@@ -9,7 +9,9 @@
         /* Basic page styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background: linear-gradient(45deg, pink,red);
+            background-image:url('https://bpb-us-e2.wpmucdn.com/sites.utdallas.edu/dist/a/1165/files/2021/01/facial-recognition-1000-2020-11.jpg');
+            background-size: 100% 100%;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,12 +22,13 @@
         /* Navbar styling */
         .navbar {
             background-color: #007BFF;
+            background: linear-gradient(45deg, red,pink,blue);
+
             color: #fff;
             padding: 10px 0;
         }
 
         .container {
-            max-width: 960px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
@@ -56,8 +59,11 @@
 
         /* Upload section styling */
         .upload-section {
+            background-image: url('https://res.cloudinary.com/govimg/image/upload/q_75,f_auto,w_2000,h_2000,c_limit/v1673477480/62014638b8d2f0524d45d995/loyalty-program-facial-recognition-jpeg.jpg');
+            background-size: 100% 100%;
             max-width: 600px;
-            margin: 20px auto;
+            margin-left: 0%;
+            margin-top:17%;
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -80,13 +86,23 @@
             text-align: center;
             padding: 10px 0;
         }
+        .navbar-brand {
+            background: linear-gradient(45deg, blue,pink,blue);
+            -webkit-text-fill-color: transparent;
+
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 20px;
+        }
+        
+        
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <div class="navbar">
         <div class="container">
-            <div class="navbar-brand">Face Recognition Attendance</div>
+            <div class="navbar-brand" >Face Recognition Attendance</div>
             <ul class="nav">
                 <li class="active"><a href="home">Home</a></li>
                 <li><a href="edit">Edit Attendance</a></li>
@@ -99,20 +115,20 @@
     <!-- Upload Section -->
     <div class="container">
         <div class="upload-section">
-            <h2>Upload Group of Photos</h2>
+            <h2 style="color:red">Upload Group of Photos</h2>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_date">Date:</label>
+                    <label for="id_date" style="color:white">Date:</label>
                     <input type="date" name="date" id="id_date" value="{{ today_date }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="id_course">Course:</label>
+                    <label for="id_course" style="color:white">Course:</label>
                     <input type="text" name="course" id="id_course" required>
                 </div>
                 <div class="form-group">
-                    <label for="id_photos">Photos:</label>
-                    <input type="file" name="Image" accept=".jpg, .png" multiple required>
+                    <label for="id_photos" style="color:white">Photos:</label>
+                    <input type="file" name="Image"  style="color:white" accept=".jpg, .png" multiple required>
                 </div>
                 <button type="submit">Upload</button>
             </form>

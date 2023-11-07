@@ -11,7 +11,14 @@
         /* Basic page styling */
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, blue,pink,blue);
+
+            -webkit-background-clip: text;
+            color: transparent;
             background-color: #f2f2f2;
+            background-image:url('https://bpb-us-e2.wpmucdn.com/sites.utdallas.edu/dist/a/1165/files/2021/01/facial-recognition-1000-2020-11.jpg');
+            background-size: 100% 100%;
+            color:white;
             margin: 0;
             padding: 0;
             display: flex;
@@ -23,11 +30,11 @@
         .navbar {
             background-color: #007BFF;
             color: #fff;
+            background: linear-gradient(45deg, red,pink,blue);
             padding: 10px 0;
         }
         
         .container {
-            max-width: 960px;
             margin: 0 auto;
             padding: 0 20px;
 
@@ -88,6 +95,8 @@
         /* Button styling */
         button {
             background-color: #007BFF;
+            background: linear-gradient(45deg, blue,pink);
+
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -107,6 +116,14 @@
             text-align: center;
             padding: 10px 0;
         }
+        .navbar-brand {
+            background: linear-gradient(45deg, blue,pink,blue);
+            -webkit-text-fill-color: transparent;
+
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 20px;
+        }
         
     </style>    
     </head>
@@ -125,7 +142,8 @@
             </div>
         </div>
     
-        <div class="container">
+           
+            <div class="container" style=" max-width: 960px;">
             <h2>Edit Attendance</h2>
             <form method="post">
                 {% csrf_token %}
