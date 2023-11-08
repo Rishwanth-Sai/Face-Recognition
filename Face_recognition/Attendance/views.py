@@ -32,16 +32,17 @@ def attend():
             attendances[line[0]]=0
     return
 
-def encode_faces(folder):
+def encode_faces():
     list_people_encoding=[]
-    for filename in os.listdir(folder):
-        known_image=fr.load_image_file(f'{folder}{filename}')
+    pupil=Student.objects.all()
+    for filename in pupil:
+        known_image=fr.load_image_file(filename.Photo)
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
-         list_people_encoding.append((know_encoding,os.path.splitext(filename)[0]))
+         list_people_encoding.append((know_encoding,filename.user.username))
         return list_people_encoding
 
-encoded_faces=encode_faces('imgs/')
+encoded_faces=encode_faces()
 def find_target_face(target_images,target_encodings,date,course):
     attend()
     face_location=fr.face_locations(target_images)
@@ -170,9 +171,9 @@ def signup(request):
         name=request.POST.get('name')        
         photo=request.FILES.get('Image')
         if(pas1==pas2):
-            user=User.objects.create(username=username,password=pas1)
+            user=User.objects.create(username=username,password=make_password(pas1))
             user.save()
-            student=Student.objects.create(user=user,Name=name,photo=photo)
+            student=Student.objects.create(user=user,Name=name,Photo=photo)
             student.save()
             user2=authenticate(request,username=username,password=pas1)
             if user2 is not None:
