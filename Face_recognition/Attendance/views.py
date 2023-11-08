@@ -172,3 +172,8 @@ def courses(request):
 def edit(request):
     return render(request,'edit.html')
 # Create your views here.
+def courses2(request):
+    att=attendance.objects.values('date').distinct().count()
+    stu=len(attendance.objects.filter(student=Student.objects.filter(user=request.user)[0],course='DSA'))
+    attper=stu/att
+    return render(request,'courses2.html',context={'attper':attper,'att':att,'stu':stu})

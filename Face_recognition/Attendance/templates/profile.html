@@ -97,12 +97,14 @@
         </div>
 
         <h2>Edit Profile Photo</h2>
-        <form method="post" action="{% url 'student_profile' student.pk %}" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="file" name="new_photo" id="new-photo" accept="image/*">
             <label for="new-photo" class="custom-file-upload">Choose a new photo</label>
             <button type="submit">Upload</button>
         </form>
+        <a href="courses2" class="add-button">Add a New Course</a>
+        
     </div>
 </body>
 </html>
