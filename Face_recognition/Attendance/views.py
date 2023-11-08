@@ -39,7 +39,7 @@ def encode_faces(folder):
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
          list_people_encoding.append((know_encoding,os.path.splitext(filename)[0]))
-    return list_people_encoding
+        return list_people_encoding
 
 encoded_faces=encode_faces('imgs/')
 def find_target_face(target_images,target_encodings,date,course):
@@ -58,7 +58,6 @@ def find_target_face(target_images,target_encodings,date,course):
                     markAttendance(label,date,course)
                 face_number+=1
     
-
 def markAttendance (label,date,course):
     name='22000'+label
     stu=Student.objects.filter(user=User.objects.filter(username=name)[0])[0]
@@ -69,7 +68,6 @@ def markAttendance (label,date,course):
     atten.save()
     if attendances[name]==0:
         attendances[name]+=1
-
 
 def writecsv(date):
     with open('Attendance/templates/attendance.csv', 'r') as f:
@@ -148,13 +146,21 @@ def download_csv(request):
         reader = csv.reader(f)
         reader=list(reader)    
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="sample.csv"'
-
-    # Create a CSV writer and write the data to the response
+    response['Content-Disposition'] = 'attachment; filename="attendance.csv"'
     writer = csv.writer(response)
     for row in reader:
         writer.writerow(row)
-
+    return response
+def download_csv_stu(request):
+    with open('Attendance/templates/attendance.csv', 'r') as f:
+        reader = csv.reader(f)
+        reader=list(reader)    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="attendance.csv"'
+    writer = csv.writer(response)
+    for row in reader:
+        if row[0]=='Name' or row[0]==request.user.username:
+            writer.writerow(row)
     return response
 def signup(request):
     if request.method=='POST':
@@ -184,6 +190,41 @@ def courses(request):
     return render(request,'courses.html',context={'att':attper,'stu':stu})
 
 def edit(request):
+    if request.method=='POST':
+        roll2=request.POST.get('roll_numbers')
+        course=request.POST.get('course')
+        date=request.POST.get('date')
+        attend=request.POST.get('attendance')
+        roll=roll2.split()
+        if attendance.objects.filter(date=date,course=course).exists():
+            for num in roll:
+                if(attend=='present'):
+                    val=1
+                    if attendance.objects.filter(student=Student.objects.filter(user=User.objects.filter(username=num)[0])[0],date=date,course=course).exists()==0:
+                        att=attendance.objects.create(student=Student.objects.filter(user=User.objects.filter(username=num)[0])[0],date=date,course=course,attendance=1)
+                        att.save()
+                else:
+                    val=0
+                    if attendance.objects.filter(student=Student.objects.filter(user=User.objects.filter(username=num)[0])[0],date=date,course=course).exists():
+                        att2=attendance.objects.filter(student=Student.objects.filter(user=User.objects.filter(username=num)[0])[0],date=date,course=course)[0]
+                        att2.attendance=0  
+                with open('Attendance/templates/attendance.csv', 'r') as f:
+                    reader = csv.reader(f)
+                    reader=list(reader)
+            k=-1
+            l=-1
+            for num in roll:
+                for i in range(0,len(reader[0])):
+                    if reader[0][i]==date:
+                        k=i        
+                for i in range(0,len(reader)):
+                    if reader[i][0]==num:
+                        l=i   
+                reader[l][k]=val  
+            with open('Attendance/templates/attendance.csv', 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerows(reader) 
+        return redirect('courses')  
     return render(request,'edit.html')
 # Create your views here.
 def courses2(request):

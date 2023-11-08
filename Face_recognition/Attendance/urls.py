@@ -11,5 +11,6 @@ urlpatterns = [
     path("signup", views.signup, name="signup"), 
     path("courses2", views.courses2, name="courses2"), 
     path('download_csv', views.download_csv, name='download_csv'), 
+    path('download_csv_stu', views.download_csv_stu, name='download_csv_stu'), 
 
 ]

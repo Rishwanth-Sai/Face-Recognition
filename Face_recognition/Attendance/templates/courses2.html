@@ -140,7 +140,7 @@
                         <td>Course 1</td>
                         <td>{{attper}}</td>
                         <td>{{stu}}/{{att}}</td>
-                        <td><button>Download file</button></td>
+                        <td><a href="{% url 'download_csv_stu'%}" class="add-button">Download</a></td>
                     </tr>
                     
                 </tbody>
@@ -154,12 +154,6 @@
         <!-- Footer -->
 
     
-        <script>
-            // JavaScript for generating and downloading the CSV file
-            document.getElementById('download-csv').addEventListener('click', function () {
-                // Implement CSV download logic here
-            });
-        </script>
     </body>
     
     
