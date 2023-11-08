@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(45deg, pink,red);
-            background-image:url('https://bpb-us-e2.wpmucdn.com/sites.utdallas.edu/dist/a/1165/files/2021/01/facial-recognition-1000-2020-11.jpg');
+            background-image:url('https://images.ctfassets.net/3viuren4us1n/5YzA7KGIWQEjt8KStZGlxd/85bde9966a9e9c4407396f424e46fc67/facial_recognition.jpg');
             background-size: 100% 100%;
             margin: 0;
             padding: 0;
@@ -22,7 +22,7 @@
         /* Navbar styling */
         .navbar {
             background-color: #007BFF;
-            background: linear-gradient(45deg, red,pink,blue);
+            background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
 
             color: #fff;
             padding: 10px 0;
@@ -59,7 +59,7 @@
 
         /* Upload section styling */
         .upload-section {
-            background-image: url('https://res.cloudinary.com/govimg/image/upload/q_75,f_auto,w_2000,h_2000,c_limit/v1673477480/62014638b8d2f0524d45d995/loyalty-program-facial-recognition-jpeg.jpg');
+            background-image: url('https://bytesbin.com/wp-content/uploads/How_to_Upload_File_to_iCloud_com.png');
             background-size: 100% 100%;
             max-width: 600px;
             margin-left: 0%;
@@ -87,7 +87,7 @@
             padding: 10px 0;
         }
         .navbar-brand {
-            background: linear-gradient(45deg, blue,pink,blue);
+            background: linear-gradient(90deg, blue,pink,blue);
             -webkit-text-fill-color: transparent;
 
             -webkit-background-clip: text;
@@ -119,15 +119,15 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_date" style="color:white">Date:</label>
+                    <label for="id_date" >Date:</label>
                     <input type="date" name="date" id="id_date" value="{{ today_date }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="id_course" style="color:white">Course:</label>
+                    <label for="id_course" >Course:</label>
                     <input type="text" name="course" id="id_course" required>
                 </div>
                 <div class="form-group">
-                    <label for="id_photos" style="color:white">Photos:</label>
+                    <label for="id_photos" >Photos:</label>
                     <input type="file" name="Image"  style="color:white" accept=".jpg, .png" multiple required>
                 </div>
                 <button type="submit">Upload</button>
