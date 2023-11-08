@@ -22,13 +22,15 @@ import cv2
 
 
 
-# attendance={}
-# with open('att.csv','r+') as f:
-#     names=f.readlines()
-
-#     for line in names:
-#         Name=line.split(',')
-#         attendance[Name[0]]=0
+attendances={}
+def attend():
+    with open('Attendance/templates/attendance.csv','r+') as f:
+        names=csv.reader(f)
+        next(names)
+        for line in names:
+            
+            attendances[line[0]]=0
+    return
 
 def encode_faces(folder):
     list_people_encoding=[]
@@ -41,6 +43,7 @@ def encode_faces(folder):
 
 encoded_faces=encode_faces('imgs/')
 def find_target_face(target_images,target_encodings,date,course):
+    attend()
     face_location=fr.face_locations(target_images)
     for person in encoded_faces:
         encoded_face=person[0]
@@ -54,6 +57,7 @@ def find_target_face(target_images,target_encodings,date,course):
                     label = filename
                     markAttendance(label,date,course)
                 face_number+=1
+    
 
 def markAttendance (label,date,course):
     name='22000'+label
@@ -63,21 +67,24 @@ def markAttendance (label,date,course):
         return
     atten=attendance.objects.create(student=stu,attendance=att,date=date,course=course)
     atten.save()
-    # if attendance[os.path.splitext(label)[0]]==0:
-    #     attendance[os.path.splitext(label)[0]]+=1
+    if attendances[name]==0:
+        attendances[name]+=1
 
 
+def writecsv(date):
+    with open('Attendance/templates/attendance.csv', 'r') as f:
+        reader = csv.reader(f)
+        reader=list(reader)
+        heading=reader[0]
+        rows = reader[1:]
+    heading.append(date)
+    for row in rows:
+        row.append(attendances[row[0]])
 
-# with open('att.csv', 'r') as f:
-#     reader = csv.reader(f)
-#     rows = list(reader)
-
-# for row in rows:
-#     row.append(attendance[row[0]])
-
-# with open('att.csv', 'w', newline='') as f:
-#     writer = csv.writer(f)
-#     writer.writerows(rows)
+    with open('Attendance/templates/attendance.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(heading)
+        writer.writerows(rows)
 
 print('done')
 def home(request):
@@ -99,13 +106,14 @@ def home(request):
                     img=fr.load_image_file(f'media/uploads/{file}')
                     t_img=fr.face_encodings(img)
                     find_target_face(img,t_img,date,course)
+                writecsv(date)
                 for photo in photos:
 
                     file_name=os.path.join(settings.MEDIA_ROOT, 'uploads', photo.name)
                     if os.path.isfile(file_name):
                         os.remove(file_name)
                
-                return redirect('view_photos')
+                return redirect('courses')
 
             return render(request, 'home.html')
         stu=Student.objects.filter(user=request.user)[0]
@@ -135,13 +143,19 @@ def Login(request):
         logout(request)
     return render(request,'login.html')
 
-def view_photos(request):
-    photos_dir = os.path.join(settings.MEDIA_ROOT, 'uploads')
-    photo_files = os.listdir(photos_dir)
-    photo_urls = [os.path.join(settings.MEDIA_URL, 'uploads', photo) for photo in photo_files]
+def download_csv(request):
+    with open('Attendance/templates/attendance.csv', 'r') as f:
+        reader = csv.reader(f)
+        reader=list(reader)    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="sample.csv"'
 
-    return render(request, 'photos.html', {'photo_urls': photo_urls})
+    # Create a CSV writer and write the data to the response
+    writer = csv.writer(response)
+    for row in reader:
+        writer.writerow(row)
 
+    return response
 def signup(request):
     if request.method=='POST':
         username=request.POST.get('username')
