@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.hashers import make_password
 from .models import Student,attendance
 from .forms import ImageUploadForm
 import csv
@@ -10,14 +11,14 @@ import face_recognition as fr
 import os
 import cv2
 
-# imgs=os.listdir('imgs/')
-# for img in imgs:
-#     roll='22000'+os.path.splitext(img)[0]
-#     pas=roll
-#     user=User.objects.create(username=roll,password=pas)
-#     name=roll
-#     stu=Student.objects.create(user=user,Name=name,Photo=img)
-#     stu.save()
+imgs=os.listdir('imgs/')
+for img in imgs:
+    roll='22000'+os.path.splitext(img)[0]
+    pas=roll
+    user=User.objects.create(username=roll,password=make_password(pas))
+    name=roll
+    stu=Student.objects.create(user=user,Name=name,Photo=img)
+    stu.save()
 
 
 
@@ -36,7 +37,7 @@ def encode_faces(folder):
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
          list_people_encoding.append((know_encoding,os.path.splitext(filename)[0]))
-    return list_people_encoding
+        return list_people_encoding
 
 encoded_faces=encode_faces('imgs/')
 def find_target_face(target_images,target_encodings,date,course):
@@ -86,6 +87,8 @@ def home(request):
                 photos = request.FILES.getlist('Image')  # Access the list of uploaded files
                 date=request.POST.get('date')
                 course=request.POST.get('course')
+                if attendance.objects.filter(date=date,course=course).exists():
+                    return render(request,'home.html',context={'mssg':'The attendance with this date and course already exists'})
                 for photo in photos:
 
                         # Save the photo to the 'uploads' folder
