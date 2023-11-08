@@ -11,14 +11,14 @@ import face_recognition as fr
 import os
 import cv2
 
-imgs=os.listdir('imgs/')
-for img in imgs:
-    roll='22000'+os.path.splitext(img)[0]
-    pas=roll
-    user=User.objects.create(username=roll,password=make_password(pas))
-    name=roll
-    stu=Student.objects.create(user=user,Name=name,Photo=img)
-    stu.save()
+# imgs=os.listdir('imgs/')
+# for img in imgs:
+#     roll='22000'+os.path.splitext(img)[0]
+#     pas=roll
+#     user=User.objects.create(username=roll,password=make_password(pas))
+#     name=roll
+#     stu=Student.objects.create(user=user,Name=name,Photo=img)
+#     stu.save()
 
 
 
@@ -108,7 +108,8 @@ def home(request):
                 return redirect('view_photos')
 
             return render(request, 'home.html')
-        return render(request,'courses.html')
+        stu=Student.objects.filter(user=request.user)[0]
+        return render(request,'profile.html',context={'student':stu})
     return redirect('login')
 def Login(request):
     if request.method=='POST':
@@ -161,7 +162,12 @@ def signup(request):
     return render(request,'signup.html')
 
 def courses(request):
-    return render(request,'courses.html')
+    stu=len(Student.objects.all())
+    att=attendance.objects.values('date').distinct().count()
+    attper=len(attendance.objects.filter(course='DSA'))
+    attper/=stu*att
+    attper=f"{attper:.{3}f}"
+    return render(request,'courses.html',context={'att':attper,'stu':stu})
 
 def edit(request):
     return render(request,'edit.html')

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .profile-container {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .student-details {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .student-photo img {
+        max-width: 200px;
+        max-height: 200px;
+        border: 2px solid #333;
+        border-radius: 50%;
+    }
+    
+    .student-info {
+        flex: 1;
+        text-align: left;
+        margin-left: 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+    
+    h2 {
+        font-size: 18px;
+        margin-top: 20px;
+    }
+    
+    form {
+        margin-top: 20px;
+    }
+    
+    input[type="file"] {
+        display: none;
+    }
+    
+    .custom-file-upload {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+    }
+    
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>    
+<body>
+    <div class="profile-container">
+        <h1>Student Profile</h1>
+        <div class="student-details">
+            <div class="student-photo">
+                <img src="media/{{ student.Photo }}" alt="{{ student.Name }} Photo">
+            </div>
+            <div class="student-info">
+                <p><strong>Name:</strong> {{ student.Name }}</p>
+                <p><strong>Roll Number:</strong> {{ student.user.username }}</p>
+            </div>
+        </div>
+
+        <h2>Edit Profile Photo</h2>
+        <form method="post" action="{% url 'student_profile' student.pk %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="new_photo" id="new-photo" accept="image/*">
+            <label for="new-photo" class="custom-file-upload">Choose a new photo</label>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+</body>
+</html>
