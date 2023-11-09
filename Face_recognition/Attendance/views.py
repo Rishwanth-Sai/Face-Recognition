@@ -40,11 +40,11 @@ def encode_faces():
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
          list_people_encoding.append((know_encoding,filename.user.username))
-        return list_people_encoding
+    return list_people_encoding
 
 encoded_faces=encode_faces()
 def find_target_face(target_images,target_encodings,date,course):
-    attend()
+
     face_location=fr.face_locations(target_images)
     for person in encoded_faces:
         encoded_face=person[0]
@@ -60,7 +60,7 @@ def find_target_face(target_images,target_encodings,date,course):
                 face_number+=1
     
 def markAttendance (label,date,course):
-    name='22000'+label
+    name=label
     stu=Student.objects.filter(user=User.objects.filter(username=name)[0])[0]
     att=1
     if attendance.objects.filter(student=stu,attendance=att,date=date,course=course).exists():
@@ -101,6 +101,7 @@ def home(request):
                     with open(os.path.join(settings.MEDIA_ROOT, 'uploads', photo.name), 'wb') as destination:
                         for chunk in photo.chunks():
                             destination.write(chunk)
+                attend()
                 for file in os.listdir('media/uploads'):
                     img=fr.load_image_file(f'media/uploads/{file}')
                     t_img=fr.face_encodings(img)
@@ -114,11 +115,12 @@ def home(request):
                
                 return redirect('courses')
 
-            return render(request, 'home.html')
+            return render(request, 'home.html',context={'mssg':''})
         stu=Student.objects.filter(user=request.user)[0]
         return render(request,'profile.html',context={'student':stu})
     return redirect('login')
 def Login(request):
+    context={'mssg':''}
     if request.method=='POST':
         username=request.POST.get('username')
         password=request.POST.get('password')
@@ -127,20 +129,24 @@ def Login(request):
             user=authenticate(request,username=username,password=password)
             if user is not None:
                 if user.is_staff:
-                    return render(request,'login.html')
+                    context['mssg']='Wrong credentials'
+                    return render(request,'login.html',context)
                 login(request,user)
                 return redirect('home')
-            return render(request,'login.html')
+            context['mssg']='Wrong credentials'
+            return render(request,'login.html',context)
         user=authenticate(request,username=username,password=password)
         if user is not None:
             if user.is_staff:
                 login(request,user)
                 return redirect('home')
-            return render(request,'login.html')
-        return render(request,'login.html')
+            context['mssg']='Wrong credentials'
+            return render(request,'login.html',context)
+        context['mssg']='Wrong credentials'
+        return render(request,'login.html',context)
     if request.user.is_authenticated:
         logout(request)
-    return render(request,'login.html')
+    return render(request,'login.html',context)
 
 def download_csv(request):
     with open('Attendance/templates/attendance.csv', 'r') as f:
@@ -171,22 +177,39 @@ def signup(request):
         name=request.POST.get('name')        
         photo=request.FILES.get('Image')
         if(pas1==pas2):
-            user=User.objects.create(username=username,password=make_password(pas1))
-            user.save()
-            student=Student.objects.create(user=user,Name=name,Photo=photo)
-            student.save()
-            user2=authenticate(request,username=username,password=pas1)
-            if user2 is not None:
-                login(request,user2)
-                return redirect('home')
+            if os.path.splitext(photo.name)==username[-4:]:
+                user=User.objects.create(username=username,password=make_password(pas1))
+                user.save()
+                student=Student.objects.create(user=user,Name=name,Photo=photo)
+                student.save()
+                user2=authenticate(request,username=username,password=pas1)
+                with open('Attendance/templates/attendance.csv', 'r') as f:
+                    reader = csv.reader(f)
+                    reader=list(reader)
+                    size=len(reader[0])
+                    row=[username]
+                for i in range(1,size):
+                    row.append(0)
 
-    return render(request,'signup.html')
+                with open('Attendance/templates/attendance.csv', 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerows(reader)
+                    writer.writerow(row)
+                if user2 is not None:
+                    login(request,user2)
+                    return redirect('home')
+                return render(request,'signup.html',context={'mssg':'Give the photo file name same as last 4 digits of the roll number.'})
+            return render(request,'signup.html',context={'mssg':'Check the passwords.'})
+    return render(request,'signup.html',context={'mssg':''})
 
 def courses(request):
     stu=len(Student.objects.all())
     att=attendance.objects.values('date').distinct().count()
+    if att==0:
+        att+=1
     attper=len(attendance.objects.filter(course='DSA'))
     attper/=stu*att
+    attper*=100
     attper=f"{attper:.{3}f}"
     return render(request,'courses.html',context={'att':attper,'stu':stu})
 
@@ -197,6 +220,9 @@ def edit(request):
         date=request.POST.get('date')
         attend=request.POST.get('attendance')
         roll=roll2.split()
+        for num in roll:
+            if Student.objects.filter(user=User.objects.filter(username=num)[0]).exists()==0:
+                return render(request,'edit.html',context={'mssg':'Check the rollnumbers'})
         if attendance.objects.filter(date=date,course=course).exists():
             for num in roll:
                 if(attend=='present'):
@@ -225,11 +251,15 @@ def edit(request):
             with open('Attendance/templates/attendance.csv', 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerows(reader) 
-        return redirect('courses')  
-    return render(request,'edit.html')
-# Create your views here.
+            return render(request,'edit.html',context={'mssg':'Your attendance has been changed.'})
+        return render(request,'edit.html',context={'mssg':'The attendance for this date doesnot exist.'})
+    return render(request,'edit.html',context={'mssg':''})
+
 def courses2(request):
     att=attendance.objects.values('date').distinct().count()
+    if att==0:
+        att+=1
     stu=len(attendance.objects.filter(student=Student.objects.filter(user=request.user)[0],course='DSA'))
     attper=stu/att
+    attper*=100
     return render(request,'courses2.html',context={'attper':attper,'att':att,'stu':stu})
