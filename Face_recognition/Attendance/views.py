@@ -9,7 +9,6 @@ from .forms import ImageUploadForm
 import csv
 import face_recognition as fr
 import os
-import cv2
 
 # imgs=os.listdir('imgs/')
 # for img in imgs:
@@ -40,7 +39,7 @@ def encode_faces():
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
          list_people_encoding.append((know_encoding,filename.user.username))
-        return list_people_encoding
+    return list_people_encoding
 
 encoded_faces=encode_faces()
 def find_target_face(target_images,target_encodings,date,course):
