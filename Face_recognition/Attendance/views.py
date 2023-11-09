@@ -20,6 +20,7 @@ import os
 #     stu.save()
 
 
+print("THIS MAY TAKE A WHILE TO ENCODE DATABASE FACES AND GENERATE LINK")
 
 attendances={}
 def attend():
