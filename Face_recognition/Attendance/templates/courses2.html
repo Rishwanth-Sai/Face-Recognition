@@ -21,7 +21,7 @@
             
             /* Navbar styling */
             .navbar {
-                background-color: #007BFF;
+                background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
                 color: #fff;
                 padding: 10px 0;
             }
@@ -75,13 +75,13 @@
             }
             
             table th {
-                background-color: #007BFF;
+                background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
                 color: #fff;
             }
             
             /* Buttons */
             button, .add-button {
-                background-color: #007BFF;
+                background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
                 color: #fff;
                 border: none;
                 padding: 5px 10px;
@@ -105,6 +105,15 @@
                 text-align: center;
                 padding: 10px 0;
             }
+            .navbar-brand {
+                background: linear-gradient(90deg, blue,pink,blue);
+                -webkit-text-fill-color: transparent;
+    
+                -webkit-background-clip: text;
+                color: transparent;
+                font-size: 20px;
+            }
+            
             
         </style>
     </head>
@@ -115,9 +124,6 @@
                 <div class="navbar-brand">Face Recognition Attendance</div>
                 <ul class="nav">
                     <li><a href="home">Home</a></li>
-                    <li class="active"><a href="courses">Courses</a></li>
-                    <li><a href="#">Profile</a></li>
-                    <li><a href="edit">Edit Attendance</a></li>
                     <li><a href="login">Logout</a></li>
                 </ul>
             </div>

@@ -126,14 +126,27 @@
         text-decoration: none;
         color: #fff;
     }
+    .student-info a{
+        background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 10px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    
 </style>    
 <body>
     <div class="navbar">
         <div class="container">
             <div class="navbar-brand" >Face Recognition Attendance</div>
             <ul class="nav">
-                <li class="active"><a href="profile">Profile</a></li>
-                <li><a href="courses2">Courses</a></li>
+                <li class="active"><a href="home">Home</a></li>
                 <li><a href="login">Logout</a></li>
             </ul>
         </div>
@@ -147,6 +160,8 @@
             <div class="student-info">
                 <p><strong>Name:</strong> {{ student.Name }}</p>
                 <p><strong>Roll Number:</strong> {{ student.user.username }}</p>
+                <a href="courses2">Courses</a>
+
             </div>
         </div>
 
