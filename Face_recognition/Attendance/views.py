@@ -40,7 +40,7 @@ def encode_faces():
         if len(known_image)>0:
          know_encoding=fr.face_encodings(known_image)[0]
          list_people_encoding.append((know_encoding,filename.user.username))
-    return list_people_encoding
+        return list_people_encoding
 
 encoded_faces=encode_faces()
 def find_target_face(target_images,target_encodings,date,course):
@@ -176,6 +176,8 @@ def signup(request):
         pas2=request.POST.get('password2')
         name=request.POST.get('name')        
         photo=request.FILES.get('Image')
+        if User.objects.filter(username=username).exists():
+            return render(request,'signup.html',context={'mssg':'This user already exists'})
         if(pas1==pas2):
             if os.path.splitext(photo.name)==username[-4:]:
                 user=User.objects.create(username=username,password=make_password(pas1))
@@ -198,8 +200,8 @@ def signup(request):
                 if user2 is not None:
                     login(request,user2)
                     return redirect('home')
-                return render(request,'signup.html',context={'mssg':'Give the photo file name same as last 4 digits of the roll number.'})
-            return render(request,'signup.html',context={'mssg':'Check the passwords.'})
+            return render(request,'signup.html',context={'mssg':'Give the photo file name same as last 4 digits of the roll number.'})
+        return render(request,'signup.html',context={'mssg':'Check the passwords.'})
     return render(request,'signup.html',context={'mssg':''})
 
 def courses(request):
@@ -221,7 +223,7 @@ def edit(request):
         attend=request.POST.get('attendance')
         roll=roll2.split()
         for num in roll:
-            if Student.objects.filter(user=User.objects.filter(username=num)[0]).exists()==0:
+            if User.objects.filter(username=num).exists()==0:
                 return render(request,'edit.html',context={'mssg':'Check the rollnumbers'})
         if attendance.objects.filter(date=date,course=course).exists():
             for num in roll:

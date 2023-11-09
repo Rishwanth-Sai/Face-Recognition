@@ -82,8 +82,62 @@
         border-radius: 5px;
         cursor: pointer;
     }
+    .navbar-brand {
+        background: linear-gradient(90deg, blue,pink,blue);
+        -webkit-text-fill-color: transparent;
+
+        -webkit-background-clip: text;
+        color: transparent;
+        font-size: 20px;
+    }
+    .navbar {
+        background-color: #007BFF;
+        background: linear-gradient(45deg, rgb(114, 206, 226),rgb(52, 133, 209),rgb(8, 109, 242));
+
+        color: #fff;
+        padding: 10px 0;
+    }
+
+    .container {
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-brand {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .nav a {
+        text-decoration: none;
+        color: #fff;
+    }
 </style>    
 <body>
+    <div class="navbar">
+        <div class="container">
+            <div class="navbar-brand" >Face Recognition Attendance</div>
+            <ul class="nav">
+                <li class="active"><a href="profile">Profile</a></li>
+                <li><a href="courses2">Courses</a></li>
+                <li><a href="login">Logout</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="profile-container">
         <h1>Student Profile</h1>
         <div class="student-details">
@@ -96,14 +150,7 @@
             </div>
         </div>
 
-        <h2>Edit Profile Photo</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="new_photo" id="new-photo" accept="image/*">
-            <label for="new-photo" class="custom-file-upload">Choose a new photo</label>
-            <button type="submit">Upload</button>
-        </form>
-        <a href="courses2" class="add-button">Add a New Course</a>
+
         
     </div>
 </body>
