@@ -179,7 +179,7 @@ def signup(request):
         if User.objects.filter(username=username).exists():
             return render(request,'signup.html',context={'mssg':'This user already exists'})
         if(pas1==pas2):
-            if os.path.splitext(photo.name)==username[-4:]:
+            if os.path.splitext(photo.name)[0]==username[-4:]:
                 user=User.objects.create(username=username,password=make_password(pas1))
                 user.save()
                 student=Student.objects.create(user=user,Name=name,Photo=photo)
