@@ -92,7 +92,7 @@ def home(request):
             if request.method == 'POST':
                 photos = request.FILES.getlist('Image')  # Access the list of uploaded files
                 date=request.POST.get('date')
-                course=request.POST.get('course')
+                course='DSA'
                 if attendance.objects.filter(date=date,course=course).exists():
                     return render(request,'home.html',context={'mssg':'The attendance with this date and course already exists'})
                 for photo in photos:
